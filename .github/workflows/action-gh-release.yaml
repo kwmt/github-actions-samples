@@ -1,11 +1,6 @@
 name: Main
 
-on:
-  push:
-    branches-ignore:
-      - '**'
-    tags:
-      - 'v*'
+on: push
 
 jobs:
   build:
