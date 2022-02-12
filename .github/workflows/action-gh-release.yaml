@@ -23,3 +23,4 @@ jobs:
       with:
         files: Release.txt
         generate_release_notes: true
+        append_body: true
