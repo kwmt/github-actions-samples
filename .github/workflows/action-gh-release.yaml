@@ -1,6 +1,9 @@
 name: Main
 
-on: push
+on:
+  create:
+    tags:
+      - '*'
 
 jobs:
   build:
