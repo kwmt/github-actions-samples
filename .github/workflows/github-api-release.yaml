@@ -14,8 +14,9 @@ jobs:
           echo "v1-$(TZ=Asia/Tokyo date +%Y%m%d-%H%M%S)" > TAG_NAME
           git tag $(cat TAG_NAME)
           git push origin $(cat TAG_NAME)
-       # [REST API] Issue のタイトルリスト
-      - run: gh api repos/${REPOSITORY}/releases -F tag_name=$(cat TAG_NAME) -F generate_release_notes=true
+
+      - name: GitHub Release # [REST API] GitHub Releases
+        run: gh api repos/${REPOSITORY}/releases -F tag_name=$(cat TAG_NAME) -F generate_release_notes=true
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           REPOSITORY: ${{ github.repository }}
