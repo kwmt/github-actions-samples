@@ -12,22 +12,35 @@ jobs:
       # 直前のリリースタグを取得する
       - name: PREVIOUS_TAG_NAME
         run: |
-          gh api repos/${REPOSITORY}/tags --jq '.[].name' | sed -n 1p
           echo "PREVIOUS_TAG_NAME=$(gh api repos/${REPOSITORY}/tags --jq '.[].name' | sed -n 1p)" >> $GITHUB_ENV
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           REPOSITORY: ${{ github.repository }}
+      # タグをプッシュ
       - name: Push tag
         run: |
           echo "v1-$(TZ=Asia/Tokyo date +%Y%m%d-%H%M%S)" > TAG_NAME
           git tag $(cat TAG_NAME)
           git push origin $(cat TAG_NAME)
 
+      # 直前のタグがenvに入っているか確認
       - name: echo env.PREVIOUS_TAG_NAME
         run: echo ${{ env.PREVIOUS_TAG_NAME }}
 
-      - name: GitHub Release # [REST API] GitHub Releases
-        run: gh api repos/${REPOSITORY}/releases/generate-notes -F tag_name=$(cat TAG_NAME) -F previous_tag_name=${{ env.PREVIOUS_TAG_NAME }} -F generate_release_notes=true
+      # リリースノートを自動生成する
+      - name: GENERATED_NOTES
+        run: |
+          echo 'GENERATED_NOTES<<EOF' >> $GITHUB_ENV
+          $(gh api repos/${REPOSITORY}/releases/generate-notes -F tag_name=$(cat TAG_NAME) -F previous_tag_name=${{ env.PREVIOUS_TAG_NAME }} -F generate_release_notes=true jq .body | sed 's,",,g' | sed "s,',,g") >> $GITHUB_ENV
+          echo 'EOF' >> $GITHUB_ENV
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPOSITORY: ${{ github.repository }}
+
+      # リリースノートを更新
+      - name: Update Release notes
+        run: |
+          gh api repos/${REPOSITORY}/releases -F tag_name=$(cat TAG_NAME) -F body=${{ env.GENERATED_NOTES }} 
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           REPOSITORY: ${{ github.repository }}
