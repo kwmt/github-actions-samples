@@ -23,7 +23,7 @@ jobs:
         if: github.event.pull_request.merged == true && startsWith(github.ref, 'release')
         with:
           generate_release_notes: true
-          tag_name: $(cat TAG_NAME)
+          tag_name: "$(cat TAG_NAME)"
 
   # check_git_tag:
   #   runs-on: ubuntu-latest
