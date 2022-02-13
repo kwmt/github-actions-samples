@@ -1,0 +1,14 @@
+name: Use GitHub API generate_release_notes 
+
+on: push
+
+jobs:
+  github:
+    runs-on: ubuntu-20.04
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      # [REST API] Issue のタイトルリスト
+      - run: gh api repos/${REPOSITORY}/releases
+        with:
+          generate_release_notes: true
