@@ -1,4 +1,4 @@
-name: Create Git Tag
+name: Use GitHub API Sample
 
 on: push
 
