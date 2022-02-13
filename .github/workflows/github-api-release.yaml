@@ -8,6 +8,7 @@ jobs:
     env:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
+      - uses: actions/checkout@v2
       - name: Push tag
         run: |
           echo "v1-$(TZ=Asia/Tokyo date +%Y%m%d-%H%M%S)" > TAG_NAME
