@@ -9,6 +9,4 @@ jobs:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
       # [REST API] Issue のタイトルリスト
-      - run: gh api repos/${REPOSITORY}/releases
-        with:
-          generate_release_notes: true
+      - run: gh api repos/${REPOSITORY}/releases -d '{"tag_name":"tag_name", "generate_release_notes":true}'
