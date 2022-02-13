@@ -1,0 +1,17 @@
+name: Create Git Tag
+
+on: push
+
+jobs:
+  github:
+    runs-on: ubuntu-20.04
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - run: gh --version
+      - run: gh --help
+      # [REST API] Issue のタイトルリスト
+      - run: gh api repos/${REPOSITORY}/issues --jq '.[].title'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPOSITORY: ${{ github.repository }}
