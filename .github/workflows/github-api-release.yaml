@@ -9,6 +9,10 @@ jobs:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - uses: actions/checkout@v2
+      # 直前のリリースタグを取得する
+      - name: PREVIOUS_TAG_NAME
+        run: |
+          echo "PREVIOUS_TAG_NAME=$(git tag --sort=-creatordate | sed -n 1p)"  >> $GITHUB_ENV
       - name: Push tag
         run: |
           echo "v1-$(TZ=Asia/Tokyo date +%Y%m%d-%H%M%S)" > TAG_NAME
@@ -17,9 +21,7 @@ jobs:
 
       - name: GitHub Release # [REST API] GitHub Releases
         run: |
-          PREVIOUS_TAG_NAME=$(git tag --sort=-creatordate | sed -n 2p)
-          echo $(cat PREVIOUS_TAG_NAME)
-          echo $(git tag --sort=-creatordate | sed -n 2p)
+          echo ${{ env.PREVIOUS_TAG_NAME }}
           gh api repos/${REPOSITORY}/releases/generate-notes -F tag_name=$(cat TAG_NAME) -F previous_tag_name=${{ env.PREVIOUS_TAG_NAME }} -F generate_release_notes=true
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
