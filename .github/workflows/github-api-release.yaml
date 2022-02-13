@@ -18,7 +18,8 @@ jobs:
       - name: GitHub Release # [REST API] GitHub Releases
         run: |
           PREVIOUS_TAG_NAME=$(git tag --sort=-creatordate | sed -n 2p)
-          echo "${{ env.PREVIOUS_TAG_NAME }}"
+          echo $(cat PREVIOUS_TAG_NAME)
+          echo $(git tag --sort=-creatordate | sed -n 2p)
           gh api repos/${REPOSITORY}/releases/generate-notes -F tag_name=$(cat TAG_NAME) -F previous_tag_name=${{ env.PREVIOUS_TAG_NAME }} -F generate_release_notes=true
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
