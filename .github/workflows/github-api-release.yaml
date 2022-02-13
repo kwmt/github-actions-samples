@@ -7,15 +7,13 @@ jobs:
     runs-on: ubuntu-20.04
     env:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      REPOSITORY: ${{ github.repository }}
     steps:
       - uses: actions/checkout@v2
       # 直前のリリースタグを取得する
       - name: PREVIOUS_TAG_NAME
         run: |
           echo "PREVIOUS_TAG_NAME=$(gh api repos/${REPOSITORY}/tags --jq '.[].name' | sed -n 1p)" >> $GITHUB_ENV
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          REPOSITORY: ${{ github.repository }}
       # タグをプッシュ
       - name: Push tag
         run: |
