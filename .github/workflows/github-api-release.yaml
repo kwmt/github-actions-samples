@@ -12,6 +12,7 @@ jobs:
       # 直前のリリースタグを取得する
       - name: PREVIOUS_TAG_NAME
         run: |
+          git tag
           echo "PREVIOUS_TAG_NAME=$(git tag --sort=-creatordate | sed -n 1p)"  >> $GITHUB_ENV
       - name: Push tag
         run: |
