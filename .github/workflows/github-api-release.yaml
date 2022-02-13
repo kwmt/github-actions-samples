@@ -31,14 +31,8 @@ jobs:
           echo 'GENERATED_NOTES<<EOF' >> $GITHUB_ENV
           $(gh api repos/${REPOSITORY}/releases/generate-notes -F tag_name=$(cat TAG_NAME) -F previous_tag_name=${{ env.PREVIOUS_TAG_NAME }} -F generate_release_notes=true jq .body | sed 's,",,g' | sed "s,',,g") >> $GITHUB_ENV
           echo 'EOF' >> $GITHUB_ENV
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          REPOSITORY: ${{ github.repository }}
 
       # リリースノートを更新
       - name: Update Release notes
         run: |
           gh api repos/${REPOSITORY}/releases -F tag_name=$(cat TAG_NAME) -F body=${{ env.GENERATED_NOTES }} 
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          REPOSITORY: ${{ github.repository }}
