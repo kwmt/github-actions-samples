@@ -13,6 +13,7 @@ jobs:
       - name: PREVIOUS_TAG_NAME
         run: |
           echo "PREVIOUS_TAG_NAME=$(git tag --sort=-creatordate | sed -n 1p)"  >> $GITHUB_ENV
+          echo $GITHUB_ENV
       - name: Push tag
         run: |
           echo "v1-$(TZ=Asia/Tokyo date +%Y%m%d-%H%M%S)" > TAG_NAME
