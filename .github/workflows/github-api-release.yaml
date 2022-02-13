@@ -12,7 +12,8 @@ jobs:
       # 直前のリリースタグを取得する
       - name: PREVIOUS_TAG_NAME
         run: |
-          gh api repos/${REPOSITORY}/tags --jq '.[].name'
+          gh api repos/${REPOSITORY}/tags --jq '.[].name' | sed -n 1p
+          echo "PREVIOUS_TAG_NAME=$(gh api repos/${REPOSITORY}/tags --jq '.[].name' | sed -n 1p)" >> $GITHUB_ENV
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           REPOSITORY: ${{ github.repository }}
