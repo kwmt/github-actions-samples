@@ -10,10 +10,13 @@ jobs:
       REPOSITORY: ${{ github.repository }}
     steps:
       - uses: actions/checkout@v2
+      - name: TRUSTDOCK App Releaseの直前のリリースタグ用
+        run: |
+          echo "RELEASE_APP_TYPE=v" >> $GITHUB_ENV
       # 直前のリリースタグを取得する
       - name: PREVIOUS_TAG_NAME
         run: |
-          echo "PREVIOUS_TAG_NAME=$(gh api repos/${REPOSITORY}/tags --jq '.[].name' | sed -n 1p)" >> $GITHUB_ENV
+          echo "PREVIOUS_TAG_NAME=$(gh api repos/${REPOSITORY}/tags --jq '.[].name' | grep -E ^"${{ env.RELEASE_APP_TYPE }}" | sed -n 1p)" >> $GITHUB_ENV
       # タグをプッシュ
       - name: Push tag
         run: |
