@@ -1,8 +1,6 @@
-name: Pull Request
+name: Self Assign Failure
 
-on:
-  pull_request:
-    types: [ opened, unassigned ]
+on: push
 
 jobs:
   assign:
@@ -15,6 +13,5 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
-          NUMBER: ${{ github.event.pull_request.number }}
+          NUMBER: 1
           ASSIGNEE: "bot"
-        if: ${{ toJSON(github.event.pull_request.assignees) == '[]' }}
