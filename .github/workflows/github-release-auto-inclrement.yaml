@@ -32,7 +32,7 @@ jobs:
             }
             const result = await github.graphql(query, variables)
             console.log(result)
-            return result
+            return result.repository.latestRelease.tagName
           
           # script: |
           #   const { data } = await github.repos.getLatestRelease({
@@ -51,17 +51,13 @@ jobs:
 
       - name: Increment version
         id: increment_version
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          echo "Current version: ${{ steps.latest_release.outputs.latest_release }}"
-          # Extract the major, minor, and patch versions
-          IFS='.' read -ra VERSION <<< "${{ steps.latest_release.outputs.latest_release }}"
-          MAJOR=${VERSION[0]}
-          MINOR=${VERSION[1]}
-          PATCH=${VERSION[2]}
-          # Increment the patch version
-          PATCH=$((PATCH+1))
-          # Set the new version number
-          NEW_VERSION="$MAJOR.$MINOR.$PATCH"
+          current_version="${{ steps.latest_release.outputs.latest_release }}"
+          echo "Current version: $current_version"
+          # Increment the version
+          NEW_VERSION=$(echo $current_version | awk -F "." '{print $1 "." $2 "." $3+1}')
           echo "New version: $NEW_VERSION"
         shell: bash
 
