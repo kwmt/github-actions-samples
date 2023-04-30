@@ -32,7 +32,7 @@ jobs:
             }
             const result = await github.graphql(query, variables)
             console.log(result)
-            return { latest_release: result.repository.latestRelease.tagName }
+            return result.repository.latestRelease.tagName
           
           # script: |
           #   const { data } = await github.repos.getLatestRelease({
@@ -53,8 +53,9 @@ jobs:
         id: increment_version
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          LATEST_RELEASE: ${{needs.latest_release.outputs.latest_release}}
         run: |
-          current_version="${{ steps.latest_release.outputs.latest_release }}"
+          current_version="${{ env.LATEST_RELEASE }}"
           echo "Current version: $current_version"
           # Increment the version
           NEW_VERSION=$(echo $current_version | awk -F "." '{print $1 "." $2 "." $3+1}')
