@@ -54,7 +54,7 @@ jobs:
         run: |
           EOF=$(dd if=/dev/urandom bs=15 count=1 status=none | base64)
           echo "GENERATED_NOTES<<$EOF" >> $GITHUB_ENV
-          $(gh api repos/${REPOSITORY}/releases/generate-notes -F tag_name=${{ env.NEW_VERSION }} -F previous_tag_name=${{ env.PREVIOUS_TAG_NAME }} -F generate_release_notes=true jq .body | sed 's,",,g' | sed "s,',,g") >> $GITHUB_ENV
+          $(gh api repos/${{ github.repository }}/releases/generate-notes -F tag_name=${{ env.NEW_VERSION }} -F previous_tag_name=${{ env.PREVIOUS_TAG_NAME }} -F generate_release_notes=true jq .body | sed 's,",,g' | sed "s,',,g") >> $GITHUB_ENV
           echo "$EOF" >> $GITHUB_ENV
           echo ${{env.GENERATED_NOTES}}
           echo $GENERATED_NOTES
@@ -67,4 +67,4 @@ jobs:
            NEW_VERSION: ${{ steps.increment_version.outputs.NEW_VERSION }}
         run: |
           echo ${{env.GENERATED_NOTES}}
-          $(gh api repos/${REPOSITORY}/releases -F tag_name=${{ env.NEW_VERSION }} -F body=${{ env.GENERATED_NOTES }})
+          $(gh api repos/${{ github.repository }}/releases -F tag_name=${{ env.NEW_VERSION }} -F body=${{ env.GENERATED_NOTES }})
