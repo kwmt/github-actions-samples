@@ -32,7 +32,7 @@ jobs:
             }
             const result = await github.graphql(query, variables)
             console.log(result)
-            return result.repository.latestRelease.tagName
+            latest_release=result.repository.latestRelease.tagName
           
       - name: Increment version
         id: increment_version
