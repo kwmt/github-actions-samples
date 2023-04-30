@@ -14,25 +14,25 @@ jobs:
           uses: actions/checkout@v3
 
         - name: Increment version in versions.toml
-          uses: actions/github-script@v4
+          uses: actions/github-script@v6
           with:
             github-token: ${{ secrets.GITHUB_TOKEN }}
             script: |
-              const fs = require('fs');
-              const TOML = require('@iarna/toml');
-              const versionFile = 'versions.toml';
-              const versionKey = 'pluginVersion';
-  
-              const version = (() => {
-                const tomlString = fs.readFileSync(versionFile, 'utf-8');
-                const toml = TOML.parse(tomlString);
-                return toml.versions[versionKey];
-              })();
-              const [major, minor, patch] = version.split('.').map(Number);
-              const newVersion = `${major}.${minor}.${patch + 1}`;
-              const newVersions = { ...fs.readFileSync(versionFile, 'utf-8') };
-              newVersions.versions[versionKey] = newVersion;
-              fs.writeFileSync(versionFile, TOML.strin
+                const fs = require('fs');
+                const TOML = require('@iarna/toml');
+                const versionFile = 'versions.toml';
+                const versionKey = 'pluginVersion';
+
+                const version = (() => {
+                    const tomlString = fs.readFileSync(versionFile, 'utf-8');
+                    const toml = TOML.parse(tomlString);
+                    return toml.versions[versionKey];
+                })();
+                const [major, minor, patch] = version.split('.').map(Number);
+                const newVersion = `${major}.${minor}.${patch + 1}`;
+                const newVersions = { ...fs.readFileSync(versionFile, 'utf-8') };
+                newVersions.versions[versionKey] = newVersion;
+                fs.writeFileSync(versionFile, TOML.stringify(newVersions));
         - name: Commit & Push
           env:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
