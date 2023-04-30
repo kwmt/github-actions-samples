@@ -41,7 +41,7 @@ jobs:
           current_version="${{steps.latest_release.outputs.result}}"
           echo "Current version: $current_version"
           # Increment the version
-          NEW_VERSION=$(echo $current_version | awk -F "." '{print $1 "." $2 "." $3+1}')
+          echo "NEW_VERSION=$(echo $current_version | awk -F "." '{print $1 "." $2 "." $3+1}')" >> $GITHUB_OUTPUT
           echo "New version: $NEW_VERSION"
         shell: bash
 
