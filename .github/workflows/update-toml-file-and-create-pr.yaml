@@ -1,0 +1,52 @@
+name: GitHub Release
+
+on:
+  push:
+    # branches:
+    #   - main
+
+jobs:
+    update_latest_release:
+        runs-on: ubuntu-latest
+    
+        steps:
+        - name: Checkout code
+          uses: actions/checkout@v3
+
+        - name: Increment version in versions.toml
+          uses: actions/github-script@v4
+          with:
+            github-token: ${{ secrets.GITHUB_TOKEN }}
+            script: |
+              const fs = require('fs');
+              const TOML = require('@iarna/toml');
+              const versionFile = 'versions.toml';
+              const versionKey = 'pluginVersion';
+  
+              const version = (() => {
+                const tomlString = fs.readFileSync(versionFile, 'utf-8');
+                const toml = TOML.parse(tomlString);
+                return toml.versions[versionKey];
+              })();
+              const [major, minor, patch] = version.split('.').map(Number);
+              const newVersion = `${major}.${minor}.${patch + 1}`;
+              const newVersions = { ...fs.readFileSync(versionFile, 'utf-8') };
+              newVersions.versions[versionKey] = newVersion;
+              fs.writeFileSync(versionFile, TOML.strin
+        - name: Commit & Push
+          env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          run: |
+            if ! git diff --exit-code --quiet
+            then
+              git config user.name "$(git --no-pager log --format=format:'%an' -n 1)"
+              git config user.email "$(git --no-pager log --format=format:'%ae' -n 1)"
+              git add .
+              git commit -m "VersionUp"
+              git push
+            fi
+        - name: Create PR
+          env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          run: |
+            gh pr create -base master --title "Update Plugin Version"
