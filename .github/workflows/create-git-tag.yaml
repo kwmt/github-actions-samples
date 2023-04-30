@@ -16,14 +16,14 @@ jobs:
         if: github.event.pull_request.merged == true && startsWith(github.ref, 'release')
         run: |
           echo "v1-$(TZ=Asia/Tokyo date +%Y%m%d-%H%M%S)" > TAG_NAME
-          git tag $(cat TAG_NAME)
-          git push origin $(cat TAG_NAME)
-      - name: Release
-        uses: softprops/action-gh-release@v1
-        if: github.event.pull_request.merged == true && startsWith(github.ref, 'release')
-        with:
-          generate_release_notes: true
-          tag_name: "$(cat TAG_NAME)"
+      #     git tag $(cat TAG_NAME)
+      #     git push origin $(cat TAG_NAME)
+      # - name: Release
+      #   uses: softprops/action-gh-release@v1
+      #   if: github.event.pull_request.merged == true && startsWith(github.ref, 'release')
+      #   with:
+      #     generate_release_notes: true
+      #     tag_name: "$(cat TAG_NAME)"
 
   # check_git_tag:
   #   runs-on: ubuntu-latest

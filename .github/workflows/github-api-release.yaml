@@ -24,11 +24,11 @@ jobs:
           echo ${{ env.PREVIOUS_TAG_NAME }}
 
       # タグをプッシュ
-      - name: Push tag
-        run: |
-          echo "v1-$(TZ=Asia/Tokyo date +%Y%m%d-%H%M%S)" > TAG_NAME
-          git tag $(cat TAG_NAME)
-          git push origin $(cat TAG_NAME)
+      # - name: Push tag
+      #   run: |
+      #     echo "v1-$(TZ=Asia/Tokyo date +%Y%m%d-%H%M%S)" > TAG_NAME
+      #     git tag $(cat TAG_NAME)
+      #     git push origin $(cat TAG_NAME)
 
       # 直前のタグがenvに入っているか確認
       - name: git tag -l --sort=-v:refname
