@@ -32,7 +32,7 @@ jobs:
             }
             const result = await github.graphql(query, variables)
             console.log(result)
-            return result.repository.latestRelease.tagName
+            return result
           
           # script: |
           #   const { data } = await github.repos.getLatestRelease({
