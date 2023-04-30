@@ -58,7 +58,7 @@ jobs:
           echo "$EOF" >> $GITHUB_ENV
           echo ${{env.GENERATED_NOTES}}
           echo $GENERATED_NOTES
-          echo $GITHUB_ENV
+          cat $GITHUB_ENV
 
       # リリースノートを更新
       - name: Update Release notes
