@@ -1,0 +1,17 @@
+name: Run Kotlin script
+
+on:
+  workflow_dispatch:
+    inputs:
+      awesome-input:
+        description: 'Awesome parameter'
+        default: 'You'
+        required: true
+
+jobs:
+  awesome-action:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Run Kotlin script
+      run: kotlinc -script ./YourScript.main.kts ${{ github.event.inputs.awesome-input }}
