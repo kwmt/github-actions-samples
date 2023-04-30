@@ -66,5 +66,5 @@ jobs:
            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
            NEW_VERSION: ${{ steps.increment_version.outputs.NEW_VERSION }}
         run: |
-          echo ""
+          echo ${{env.GENERATED_NOTES}}
           $(gh api repos/${REPOSITORY}/releases -F tag_name=${{ env.NEW_VERSION }} -F body=${{ env.GENERATED_NOTES }})
