@@ -42,17 +42,16 @@ jobs:
           echo "Current version: $current_version"
           # Increment the version
           echo "NEW_VERSION=$(echo $current_version | awk -F "." '{print $1 "." $2 "." $3+1}')" >> $GITHUB_OUTPUT
-          echo "New version: $NEW_VERSION"
+          echo "PREVIOUS_TAG_NAME=$current_version" >> $GITHUB_OUTPUT
         shell: bash
 
+      # リリースノートを自動生成する
       - name: Create GitHub Release
-        id: create_release
-        uses: "actions/create-release@v1"
-        with:
-           tag_name: ${{ steps.increment_version.outputs.NEW_VERSION }}
-           release_name: Release ${{ steps.increment_version.outputs.NEW_VERSION }}
-           body: Release ${{ steps.increment_version.outputs.NEW_VERSION }}
-           draft: false
-           prerelease: false
         env:
            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+           NEW_VERSION: ${{ steps.increment_version.outputs.NEW_VERSION }}
+           PREVIOUS_TAG_NAME: ${{ steps.increment_version.outputs.PREVIOUS_TAG_NAME }}
+        run: |
+          echo 'GENERATED_NOTES<<EOF' >> $GITHUB_ENV
+          $(gh api repos/${REPOSITORY}/releases/generate-notes -F tag_name=${{ env.NEW_VERSION }} -F previous_tag_name=${{ env.PREVIOUS_TAG_NAME }} -F generate_release_notes=true jq .body | sed 's,",,g' | sed "s,',,g") >> $GITHUB_ENV
+          echo 'EOF' >> $GITHUB_ENV
