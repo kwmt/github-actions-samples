@@ -1,5 +1,4 @@
-name: GitHub Release
-
+name: Update Toml file and Create PR
 on:
   push:
     # branches:
