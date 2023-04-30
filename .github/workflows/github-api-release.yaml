@@ -10,7 +10,7 @@ jobs:
       REPOSITORY: ${{ github.repository }}
     steps:
       - uses: actions/checkout@v2
-      - name: TRUSTDOCK App Releaseの直前のリリースタグ用
+      - name: Releaseの直前のリリースタグ用
         # if: startsWith(github.ref, 'release')
         run: |
           echo "RELEASE_APP_TYPE=v" >> $GITHUB_ENV
