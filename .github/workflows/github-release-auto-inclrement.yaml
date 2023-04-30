@@ -31,10 +31,9 @@ jobs:
               name: context.repo.repo,
             }
             const result = await github.graphql(query, variables)
-            console.log(result.repository)
-            console.log(result.repository.latestRelease.tagName)
             return result.repository.latestRelease.tagName
           result-encoding: string
+
       - name: Increment version
         id: increment_version
         run: |
@@ -42,11 +41,9 @@ jobs:
           echo "Current version: $current_version"
           # Increment the version
           echo "NEW_VERSION=$(echo $current_version | awk -F "." '{print $1 "." $2 "." $3+1}')" >> $GITHUB_OUTPUT
-          echo "PREVIOUS_TAG_NAME=$current_version" >> $GITHUB_OUTPUT
         shell: bash
 
-
-      # リリースノートを更新
+      # リリースノート作成
       - name: Update Release notes
         env:
            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
