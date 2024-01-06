@@ -6,7 +6,7 @@ on:
     #   - main
 
 jobs:
-  latest_release:
+  update_latest_release:
     runs-on: ubuntu-latest
 
     steps:
